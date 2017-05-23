@@ -55,15 +55,14 @@
    function reservar(id){
     $.ajax({
       type: "POST",
-      dataType: "JSON",
+      dataType: "HTML",
       url:"http://cataoso.hol.es/aerolinea/guardarReserva.php",
       data: {
           id : id
       },
       success: confirmacionReserva
     });
-    console.log("Entre a reservar");
-    console.log(id);
+    
   }
 
   function confirmacionReserva(){

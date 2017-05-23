@@ -13,9 +13,8 @@
         url:"http://cataoso.hol.es/aerolinea/consultarDestinos.php", 
         success:llegadaDatos }); 
 
-  function llegadaDatos(d){
-    var cadena;
-    cadena += "<table class='table table-hover'>";
+  function llegadaDatos(d){    
+    var cadena = "<table class='table table-hover'>";
     cadena +="<thead>";
     cadena +=  "<tr>";
     cadena +=    "<th>Destino</th>";
@@ -45,15 +44,14 @@
   function reservar(id){
     $.ajax({
       type: "POST",
-      dataType: "JSON",
+      dataType: "HTML",
       url:"http://cataoso.hol.es/aerolinea/guardarReserva.php",
       data: {
           id : id
       },
       success: confirmacionReserva
     });
-    console.log("Entre a reservar");
-    console.log(id);
+    
   }
 
   function confirmacionReserva(){

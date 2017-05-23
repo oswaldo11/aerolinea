@@ -7,7 +7,7 @@
     <script>
 
     $(document).ready(function(){
-      $("#respuesta").load("http://cataoso.hol.es/aerolinea/guardarDestino.php");
+      //$("#respuesta").load("http://cataoso.hol.es/aerolinea/guardarDestino.php");
     });
 
 window.onload = function(){
@@ -24,7 +24,7 @@ window.onload = function(){
 
   $.ajax({ 
   type: "POST", 
-  dataType: "JSON", 
+  dataType: "html", 
   url:"http://cataoso.hol.es/aerolinea/guardarDestino.php", 
   data:"destino="+destino+
       "&aerolinea="+aerolinea+

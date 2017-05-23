@@ -6,7 +6,8 @@ include ("conexion.php");
 
 $tiempo = $_POST["tiempo"];
 
-$sentencia= "select * from destinos where tiempo = '". $tiempo ."' ";
+$sentencia= "select * from destinos where tiempovuelo = '". $tiempo ."' ";
+
 $query = mysqli_query ($conexion,$sentencia);
 
 $cantidadRegistros = mysqli_num_rows($query);
