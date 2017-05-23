@@ -1,0 +1,122 @@
+<html>
+<head>
+	<title>Inmobiliaria</title>
+	 <link href="css/bootstrap.min.css" rel="stylesheet">
+	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js">
+	 </script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+
+    $(document).ready(function(){
+      peticionSelect();
+    });
+
+       window.onload = function(){
+         peticionSelect();
+      $("#consultaTiempo").click(enviar);
+    }
+
+        function peticionSelect(){
+        $.ajax({
+        type: "POST",
+        async: false,
+        dataType: "JSON",
+        url: "http://cataoso.hol.es/aerolinea/consultarDestinos.php",
+        success: llenarSelect
+      });
+    }
+
+    function llenarSelect(d){
+      var llenado;
+      llenado += "<div class='form-group'>";
+      llenado += "<label for='amount'>Rango de precios:</label>";
+      llenado += "<select id='tiempo' name='tiempo' class='form-control'>";
+      $.each(d, function (i,data){
+        llenado += "<option value="+ data.tiempovuelo +">" + data.tiempovuelo + "</option>";
+      });
+      llenado += "</select>";
+      llenado += "</div>";
+    }
+
+     function enviar() { 
+
+        $.ajax({ 
+        type: "POST",
+        dataType: "JSON",
+        url:"http://cataoso.hol.es/aerolinea/consultarTiempos.php", 
+        data:{
+          tiempo: $("#tiempo").val()
+        }, 
+        success:llegadaDatos 
+        }); 
+        return false; 
+    } 
+
+    function llegadaDatos(d){
+        var cadena;
+        cadena += "<table class='table table-hover'>";
+        cadena +="<thead>";
+        cadena +=  "<tr>";
+        cadena +=    "<th>Destino</th>";
+        cadena +=    "<th>Aerolinea</th>";
+        cadena +=    "<th>Precio</th>";
+        cadena +=    "<th>Tiempo de Vuelo</th>";
+        cadena +=    "<th>Servicios</th>";
+        cadena +=  "</tr>";
+        cadena +="</thead>";
+        cadena +="<tbody>";
+        $.each(d, function (i, data){
+          cadena +=  "<tr>";
+          cadena +=    "<th>" + data.destinos + "</th>";
+          cadena +=    "<th>" + data.aerolinea + "</th>";
+          cadena +=    "<th>" + data.precio + "</th>";
+          cadena +=    "<th>" + data.tiempovuelo + "</th>";
+          cadena +=    "<th>" + data.servicios + "</th>";
+          cadena +=    "<th> <button type='button' id='guardarDestino' class='btn btn-default' onclick='reservar("+data.id+")'>Reservar</button> </th>";
+          cadena +=  "</tr>";
+        });
+        cadena += "</tbody></table>";
+
+        $('#resultado').html(cadena);
+ }
+
+   function reservar(id){
+    $.ajax({
+      type: "POST",
+      dataType: "JSON",
+      url:"http://cataoso.hol.es/aerolinea/guardarReserva.php",
+      data: {
+          id : id
+      },
+      success: confirmacionReserva
+    });
+    console.log("Entre a reservar");
+    console.log(id);
+  }
+
+  function confirmacionReserva(){
+    alert("¡Reserva realizada con Éxito!");
+  }
+
+    </script>
+    
+
+</head>
+<body>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <ul class="nav nav-pills nav-stacked">
+       <li class="active" role="presentation"><a href="menucliente.html">Regresar</a></li>
+       <li class="active" role="presentation"><a href="index.html">Salir</a></li>
+    </ul>
+  </div>
+</nav>
+
+<h1>Consultar por Tiempo de Vuelo</h1>
+
+<button type="button" id="consultaTiempo" class="btn btn-default">Consultar Por Tiempo De Vuelo</button>
+<div id="resultado"></div>
+
+</body>
+</html>

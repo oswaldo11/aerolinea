@@ -1,0 +1,120 @@
+<html>
+<head>
+	<title>Inmobiliaria</title>
+	 <link href="css/bootstrap.min.css" rel="stylesheet">
+	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script>
+        $(function() {
+            $("#slider-range").slider({
+                range: true,
+                min: 0,
+                max: 3000000,
+                values: [100000, 200000],
+                slide: function(event, ui) {
+                    $("#amount").val(ui.values[ 0 ] + "COL-" + ui.values[ 1 ] + "COL");
+                }
+            });
+
+            $( "#amount" ).val($("#slider-range").slider("values", 0) + "-" + $("#slider-range").slider( "values", 1));
+        });
+</script>
+    <script type="text/javascript">
+       window.onload = function(){
+      $("#consultaPrecios").click(enviar);
+    }
+
+     function enviar() { 
+
+        $.ajax({ 
+        type: "POST",
+        dataType: "JSON",
+        url:"http://cataoso.hol.es/aerolinea/consultarPrecios.php", 
+        data:{
+          precios: $("#amount").val()
+        }, 
+        success:llegadaDatos,
+        error: error 
+        }); 
+    } 
+
+    function error(){
+      alert("Error");
+    }
+
+    function llegadaDatos(d){
+        var cadena;
+        cadena += "<table class='table table-hover'>";
+        cadena +="<thead>";
+        cadena +=  "<tr>";
+        cadena +=    "<th>Destino</th>";
+        cadena +=    "<th>Aerolinea</th>";
+        cadena +=    "<th>Precio</th>";
+        cadena +=    "<th>Tiempo de Vuelo</th>";
+        cadena +=    "<th>Servicios</th>";
+        cadena +=  "</tr>";
+        cadena +="</thead>";
+        cadena +="<tbody>";
+        $.each(d, function (i, data){
+          cadena +=  "<tr>";
+          cadena +=    "<th>" + data.destinos + "</th>";
+          cadena +=    "<th>" + data.aerolinea + "</th>";
+          cadena +=    "<th>" + data.precio + "</th>";
+          cadena +=    "<th>" + data.tiempovuelo + "</th>";
+          cadena +=    "<th>" + data.servicios + "</th>";
+          cadena +=    "<th> <button type='button' id='guardarDestino' class='btn btn-default' onclick='reservar("+data.id+")'>Reservar</button> </th>";
+          cadena +=  "</tr>";
+        });
+        cadena += "</tbody></table>";
+
+        $('#resultado').html(cadena);
+ }
+
+   function reservar(id){
+    $.ajax({
+      type: "POST",
+      dataType: "hmtl",
+      url:"http://cataoso.hol.es/aerolinea/guardarReserva.php",
+      data: {
+          id : id
+      },
+      success: confirmacionReserva
+    });
+  }
+
+  function confirmacionReserva(){
+    alert("¡Reserva realizada con Éxito!");
+  }
+
+    </script>
+    
+
+</head>
+<body>
+
+
+<h1>Consultar Precios</h1>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <ul class="nav nav-pills nav-stacked">
+       <li class="active" role="presentation"><a href="menucliente.html">Regresar</a></li>
+       <li class="active" role="presentation"><a href="index.html">Salir</a></li>
+    </ul>
+  </div>
+</nav>
+ 
+
+<div class="form-group">
+  <label for="amount">Rango de precios:</label>
+  <input type="text" id="amount" name="range" style="border: 0; color: #f6931f; font-weight: bold;" />
+<div id="slider-range" style="width:500px;"></div>
+</div>
+<button type="button" id="consultaPrecios" class="btn btn-default">Consultar Precios</button>
+<div id="resultado"></div>
+
+</body>
+</html>

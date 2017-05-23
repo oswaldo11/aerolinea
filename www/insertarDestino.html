@@ -1,0 +1,115 @@
+<html>
+<head>
+	<title>Inmobiliaria</title>
+	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+	 <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script>
+
+    $(document).ready(function(){
+      $("#respuesta").load("http://cataoso.hol.es/aerolinea/guardarDestino.php");
+    });
+
+window.onload = function(){
+  $("#guardarDestino").click(enviar);
+}
+
+
+  function enviar() { 
+  var destino=$("#destino").val(); 
+  var aerolinea=$("#aerolinea").val(); 
+  var precio=$("#precio").val(); 
+  var tiempovuelo=$("#tiempovuelo").val(); 
+  var servicio = $("#servicio").val();
+
+  $.ajax({ 
+  type: "POST", 
+  dataType: "JSON", 
+  url:"http://cataoso.hol.es/aerolinea/guardarDestino.php", 
+  data:"destino="+destino+
+      "&aerolinea="+aerolinea+
+      "&precio="+precio+
+      "&tiempovuelo="+tiempovuelo+
+      "&servicio="+servicio, 
+  beforeSend:inicioEnvio, 
+  success:llegadaDatos,
+  error:problemas, 
+  timeout:4000 }); 
+  return false; 
+} 
+
+  function inicioEnvio()
+  {
+      $("#respuesta").text("Enviando datos....");
+  }
+
+  function llegadaDatos(datos)
+  {
+      $("#respuesta").text(datos);
+                  
+  }
+  function problemas()
+  {
+      $("#respuesta").text('Problemas en el servidor.');
+  }
+
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <ul class="nav nav-pills nav-stacked">
+       <li class="active" role="presentation"><a href="insertarDestino.html">Ingresar Destino</a></li>
+       <li class="active" role="presentation"><a href="menuadministrador.html">Regresar</a></li>
+       <li class="active" role="presentation"><a href="index.html">Salir</a></li>
+    </ul>
+  </div>
+</nav>
+
+<h1>Registrar Destino del Viaje</h1>
+
+
+ <form method="POST" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="destino">Destino del Vuelo:</label>
+    <input type="text" class="form-control" id="destino" name="destino">
+  </div>
+
+   <div class="form-group">
+    <label for="aerolinea">Aerolinea:</label>
+    <select id="aerolinea" name="aerolinea" class="form-control">
+      <option value="Avianca">Avianca</option>
+      <option value="VivaColombia">Viva Colombia</option>
+      <option value="LAN">LAN</option>
+      <option value="copaAirlanes">Copa Airlanes</option>
+      <option value="easyfly">EasyFly</option>
+      <option value="satena">Satena</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="precio">Precio del Vuelo:</label>
+    <input type="number" class="form-control" id="precio" name="precio">
+  </div>
+
+   <div class="form-group">
+    <label for="tiempo">Tiempo de Vuelo:</label>
+    <input type="text" class="form-control" id="tiempovuelo" name="tiempovuelo">
+  </div>
+
+ <div class="form-group">
+    <label for="servicio">Servicios:</label>
+    <input type="textarea" class="form-control" id="servicio" name="servicio">
+  </div>
+
+<button type="button" id="guardarDestino" class="btn btn-default">Guardar Destino</button>
+
+ </form>
+
+<div id="respuesta"> </div>
+
+
+
+
+</body>
+</html>
